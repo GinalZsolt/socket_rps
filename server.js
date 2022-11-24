@@ -13,27 +13,28 @@ app.use(express.static('assets'));
 io.on('connection',(socket)=>{
 
     socket.on('join',()=>{
-        const user = userJoin(socket.id, session.userName, session.roomName);
-
-        socket.join(user.room);
-
         
-
+        const user = userJoin(socket.id, session.userName, session.roomName);
+        socket.join(user.room);
+        socket.emit("JoinSelf",{name:user.username})
+        socket.to(user.room).emit("JoinOponent",{name:user.username})
+        if (getRoomUsers(user.room).length!=1) {
+            socket.emit("JoinAlreadyIn",{name:getRoomUsers(user.room).filter(curr => !(curr.id === user.id))[0].username})
+        }
     })
-
-
 })
 
 app.get('/', (req, res) => {
     ejs.renderFile('views/index.ejs', (err, data) => {
-        res.send(data);
+        if (err) throw err;
+        else res.send(data);
     })
 })
 
 app.get('/jacci', (req, res) => {
     ejs.renderFile('views/jacci.ejs', (err, data) => {
         if (err) throw err;
-            res.send(data);
+        else res.send(data);
     })
 })
 
@@ -51,7 +52,7 @@ app.post('/jacci', (req, res) => {
         session.roomName = user.roomname;
         ejs.renderFile('views/jacci.ejs', { user }, (err, data) => {
             if (err) throw err;
-            res.send(data);
+            else res.send(data);
         })
     }
     
@@ -60,6 +61,6 @@ app.post('/jacci', (req, res) => {
     })
 })
 
-server.listen(3001,()=>{
+server.listen(3000,()=>{
     console.log("Listening...")
 })
