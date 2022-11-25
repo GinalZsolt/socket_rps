@@ -29,3 +29,8 @@ footer {
     font-size: 80%;
     padding: 10px;
 }
+img{
+    display: flex;
+    width:60%;
+    margin: auto;
+}

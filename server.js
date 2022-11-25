@@ -12,7 +12,6 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.static('assets'));
 
 io.on('connection',(socket)=>{
-
     socket.on('join',()=>{
         if(getRoomUsers(session.roomName).length==2) socket.emit('leave')
         else{
@@ -26,7 +25,7 @@ io.on('connection',(socket)=>{
             if(getRoomUsers(user.room).length==2) socket.emit('startgame')
         }
     })
-
+    
 })
 
 app.get('/', (req, res) => {
@@ -42,7 +41,6 @@ app.get('/jacci', (req, res) => {
         else res.send(data);
     })
 })
-
 
 app.post('/jacci', (req, res) => {
     let user = {

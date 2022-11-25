@@ -1,13 +1,18 @@
 <%- include('header') %>
-
 <main>
 
+<h2 class="text-center my-3" ><span id="player"></span><span id="oponent"></span></h2>
+    
+    
+<hr class="w-75 m-auto">
+
+<dir class="row">
+    <dic class="col-4"><img src="/img/ko.png" alt="Kő"></dic>
+    <dic class="col-4"><img src="/img/papir.png" alt="Papír"></dic>
+    <dic class="col-4"><img src="/img/ollo.png" alt="Olló"></dic>
+</dir>   
+    
 </main>
-
-
-
 <script src="/socket.io/socket.io.js"></script>
-
 <script src="./js/client.js"></script>
-
 <%- include('footer') %>

@@ -6,14 +6,14 @@ socket.emit('join')
 
 
 socket.on("JoinSelf",(data)=>{
-    console.log(data.name)
+    document.querySelector("#player").innerHTML=data.name
 })
 socket.on("JoinOponent",(data)=>{
-    console.log(data.name)
+    document.querySelector("#oponent").innerHTML=" vs "+data.name
 })
 socket.on("JoinAlreadyIn",(data)=>{
-    console.log(data.name)
+    document.querySelector("#oponent").innerHTML=" vs "+data.name
 })
 socket.on('leave',()=> {
     window.location.href = "/";
-});
+})
