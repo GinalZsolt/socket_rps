@@ -5,6 +5,7 @@ const session = require('express-session');
 const server = require('http').createServer(app)
 const io = require('socket.io')(server)
 const { userJoin, userLeave, getCurrentUser, getRoomUsers } = require('./utils/userops.js');
+const res = require('express/lib/response');
 
 
 app.use(express.urlencoded({ extended: true }))
@@ -13,15 +14,19 @@ app.use(express.static('assets'));
 io.on('connection',(socket)=>{
 
     socket.on('join',()=>{
-        
-        const user = userJoin(socket.id, session.userName, session.roomName);
-        socket.join(user.room);
-        socket.emit("JoinSelf",{name:user.username})
-        socket.to(user.room).emit("JoinOponent",{name:user.username})
-        if (getRoomUsers(user.room).length!=1) {
-            socket.emit("JoinAlreadyIn",{name:getRoomUsers(user.room).filter(curr => !(curr.id === user.id))[0].username})
+        if(getRoomUsers(session.roomName).length==2) socket.emit('leave')
+        else{
+            const user = userJoin(socket.id, session.userName, session.roomName);
+            socket.join(user.room);
+            socket.emit("JoinSelf",{name:user.username})
+            socket.to(user.room).emit("JoinOponent",{name:user.username})
+            if (getRoomUsers(user.room).length!=1) {
+                socket.emit("JoinAlreadyIn",{name:getRoomUsers(user.room).filter(curr => !(curr.id === user.id))[0].username})
+            }
+            if(getRoomUsers(user.room).length==2) socket.emit('startgame')
         }
     })
+
 })
 
 app.get('/', (req, res) => {
